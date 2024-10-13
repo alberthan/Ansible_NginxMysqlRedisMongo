@@ -1,0 +1,7 @@
+---
+
+- hosts: "{{ spec_host | default('keepalived') }}"
+  gather_facts: false
+  serial: 1
+  roles:
+    - keepalived

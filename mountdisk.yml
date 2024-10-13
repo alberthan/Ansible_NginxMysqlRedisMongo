@@ -1,0 +1,6 @@
+---
+
+- hosts: "{{ spec_host | default('all') }}"
+  gather_facts: false
+  roles:
+    - mountdisk

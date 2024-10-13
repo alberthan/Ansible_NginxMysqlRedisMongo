@@ -1,0 +1,6 @@
+---
+
+- hosts: "{{ spec_host | default('mongodb') }}"
+  gather_facts: false
+  roles:
+    - mongodb_shard
