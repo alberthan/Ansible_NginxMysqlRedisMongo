@@ -1,0 +1,10 @@
+---
+- name:  检查基线扫描结果文件
+  shell:  ls -l /tmp/jixian/
+  register: jixian_output
+  ignore_errors: yes
+- name: 显示基线扫描结果文件
+  debug:
+    msg: "{{ jixian_output.stdout_lines }}" 
+ 
+ 

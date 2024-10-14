@@ -1,0 +1,9 @@
+- name:  检查ntp时钟同步服务器配置
+  shell: ntpq -p
+  register: ntpd_output
+  ignore_errors: yes
+  
+- name: 显示ntp时钟同步服务器配置
+  debug:
+    msg: "{{ ntpd_output.stdout_lines }}"
+        

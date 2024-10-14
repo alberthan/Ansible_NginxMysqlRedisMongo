@@ -1,0 +1,10 @@
+- name:  检查/etc/pam.d/su文件认证配置情况
+  shell: |
+    #!/bin/bash
+    r=$(cat /etc/pam.d/su)
+    printf '%s\n' "$r"
+  register: pam_su_output
+  ignore_errors: yes
+- name: 显示/etc/pam.d/su文件认证配置情况
+  debug: 
+    msg: "{{ pam_su_output.stdout_lines }}"

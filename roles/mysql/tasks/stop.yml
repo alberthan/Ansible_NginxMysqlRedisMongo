@@ -1,0 +1,6 @@
+---
+
+- name: 停止mysqld
+  systemd: name=mysqld state=stopped enabled=yes  
+
+- import_tasks: status.yml

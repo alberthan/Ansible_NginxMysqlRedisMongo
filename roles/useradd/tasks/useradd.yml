@@ -1,0 +1,14 @@
+- name: 创建用户 {{ username }} 并设置密码，如果用户已经存在则修改密码
+  user:
+    name: "{{ username }}"
+    password: "{{ chapass | string | password_hash('sha512') }}"
+    state: present
+    update_password: always
+- name: 为 {{ username }} 用户配置sudo权限
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^{{ username }}'
+    line: '{{ username }} ALL=(ALL) ALL'
+    validate: '/usr/sbin/visudo -cf %s'
+- import_tasks: check.yml

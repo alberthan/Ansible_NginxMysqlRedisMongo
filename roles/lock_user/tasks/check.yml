@@ -1,0 +1,36 @@
+- name: 查看指定用户shell设置情况
+  vars:
+    username: "{{ item }}"
+  shell: grep  "^{{ username }}" /etc/passwd
+  register: usershell_output
+  ignore_errors: yes
+  with_items:
+    - lp
+    - sync
+    - halt
+    - operator
+    - games
+    - nobody
+    
+- name: 显示指定用户shell设置情况
+  debug:
+    msg: "{{ item.item }}: {{ item.stdout }}"
+  loop: "{{ usershell_output.results }}"
+  
+  
+- name: 查看指定用户锁定状态
+  shell: passwd -S {{ item }}
+  register: userlock_output
+  ignore_errors: yes
+  with_items:
+    - lp
+    - sync
+    - halt
+    - operator
+    - games
+    - nobody
+
+- name: 显示指定用户锁定状态
+  debug:
+    msg: "{{ item.item }}: {{ item.stdout }}"
+  loop: "{{ userlock_output.results }}"

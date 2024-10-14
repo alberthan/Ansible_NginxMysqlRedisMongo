@@ -1,0 +1,8 @@
+- name: 检查在/etc/security/limits.conf文件中定义的core文件的限制情况
+  shell:   egrep -v '^#|^$' /etc/security/limits.conf 
+  register: limits_output
+  ignore_errors: yes
+
+- name: 显示在/etc/security/limits.conf文件中定义的core文件的限制情况
+  debug:
+    msg: "{{ limits_output.stdout_lines }}"

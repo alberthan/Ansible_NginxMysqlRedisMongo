@@ -1,0 +1,10 @@
+---
+- name:  检查备份结果文件
+  shell:  ls -l /tmp/backup/*.tar.bz2
+  register: backup_output
+  ignore_errors: yes
+- name: 显示备份结果文件
+  debug:
+    msg: "{{ backup_output.stdout_lines }}" 
+ 
+ 

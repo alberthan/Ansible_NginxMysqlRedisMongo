@@ -1,0 +1,9 @@
+- name: 在/etc/host.conf文件中配置主机解析地址的顺序。先使用hosts，再使用BIND（DNS）进行解析
+  lineinfile:
+    path: /etc/host.conf
+    regexp: '^order'
+    state: present
+    line: 'order hosts,bind'
+    backup: yes
+  ignore_errors: yes
+- import_tasks: check.yml

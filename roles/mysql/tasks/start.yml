@@ -1,0 +1,8 @@
+---
+- name: 启动mysql服务并设置开机自启动
+  service:
+    name: mysqld
+    state: started
+    enabled: yes
+    
+- import_tasks: status.yml

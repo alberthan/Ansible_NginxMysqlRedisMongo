@@ -1,0 +1,24 @@
+---
+- name: 创建/tmp/jixian基线检查存在脚本目录
+  file:
+    path: /tmp/jixian
+    state: directory
+- name: 复制主机基线检查脚本文件到/tmp/jixian
+  copy:
+    src: '{{ item }}'
+    dest: /tmp/jixian
+  loop: 
+    - check_server_euleros.pl
+    - check_server_euleros.sh
+    
+- name: 在/tmp/jixian目录下执行基线检查命令
+  shell: sh check_server_euleros.sh "{{ inventory_hostname }}"
+  args: 
+    chdir: /tmp/jixian
+- name: 将基线检查产生的结果文件拉取到本地的/tmp/jixian/目录
+  fetch:
+    src: /tmp/jixian/{{ inventory_hostname }}_EulerOS_chk.xml
+    dest: /tmp/jixian/
+    flat: yes
+
+- import_tasks: check.yml

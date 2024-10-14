@@ -1,0 +1,4 @@
+---
+- name: 启动mongos
+ # when: mongos is defined
+  command: /opt/mongodb/bin/mongos -f /data/mongodb/mongos/conf/mongos.conf

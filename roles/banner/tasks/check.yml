@@ -1,0 +1,29 @@
+- name:  检查在/etc/motd文件中是否配置系统banner登录提示信息
+  shell: cat /etc/motd
+  register: banner_motd_output
+  ignore_errors: yes
+- name: 显示在/etc/motd文件中配置的系统banner登录提示信息内容
+  debug:
+    msg: "{{ banner_motd_output.stdout }}" 
+ 
+ 
+- name: 检查在/etc/issue文件中是否配置系统banner登录提示信息
+  shell: cat /etc/issue
+  register: banner_issue_output
+  ignore_errors: yes
+- name: 显示在/etc/issue文件中配置的系统banner登录提示信息内容
+  debug:
+    msg: "{{ banner_issue_output.stdout }}" 
+    
+    
+- name: 检查在/etc/issue.net文件中是否配置系统banner登录提示信息
+  shell: cat /etc/issue.net
+  register: banner_issue_net_output
+  ignore_errors: yes
+- name: 显示在/etc/issue.net文件中配置的系统banner登录提示信息内容
+  debug:
+    msg: "{{ banner_issue_net_output.stdout }}" 
+
+
+
+

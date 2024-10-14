@@ -1,0 +1,12 @@
+---
+- name: config集群初始化
+  when: configserver is defined
+  shell:
+    cmd: |
+      /opt/mongodb/bin/mongo --port 27000 << EOF
+      use admin
+      config={_id:"cfgsvr",members:[{_id:0,host:"{{ play_hosts[0] }}:27000"},{_id:1,host:"{{ play_hosts[1] }}:27000"},{_id:2,host:"{{ play_hosts[2] }}:27000"}]}
+      rs.initiate(config)
+      EOF
+      sleep 20
+  run_once: true

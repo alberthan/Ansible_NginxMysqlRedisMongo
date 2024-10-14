@@ -1,0 +1,13 @@
+---
+
+- name: 获取nginx状态
+  shell: |
+    #!/bin/bash
+    r=`systemctl status nginx| grep Active`
+    echo $r
+  register: nginx_result
+
+- name: 查看nginx状态
+  debug: var=nginx_result.stdout verbosity=0
+
+

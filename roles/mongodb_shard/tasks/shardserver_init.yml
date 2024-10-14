@@ -1,0 +1,16 @@
+---
+- name: shard集群初始化
+  when: shardserver is defined
+  shell:
+    cmd: |
+      /opt/mongodb/bin/mongo --port {{ item.port }} << EOF
+      use admin
+      config={_id:"{{ item.shard }}",members:[{_id:0,host:"{{ play_hosts[0] }}:{{ item.port }}"},{_id:1,host:"{{ play_hosts[1] }}:{{ item.port }}"},{_id:2,host:"{{ play_hosts[2] }}:{{ item.port }}"}]}
+      rs.initiate(config)
+      EOF
+      sleep 20
+  with_items:
+    - { shard: 'shard1', port: '27001'}
+    - { shard: 'shard2', port: '27002'}
+    - { shard: 'shard3', port: '27003'}
+  run_once: true

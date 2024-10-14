@@ -1,0 +1,15 @@
+---
+- name: mongos初始化
+  when: mongos is defined
+  shell:
+    cmd: |
+      /opt/mongodb/bin/mongo --port 30000 << EOF
+      use admin
+      sh.addShard("{{ item.shard }}/{{ play_hosts[0] }}:{{ item.port }},{{ play_hosts[1] }}:{{ item.port }},{{ play_hosts[2] }}:{{ item.port }}")
+      EOF
+  with_items:
+    - { shard: 'shard1', port: '27001'}
+    - { shard: 'shard2', port: '27002'}
+    - { shard: 'shard3', port: '27003'}
+  run_once: true
+

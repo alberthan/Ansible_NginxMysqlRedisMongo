@@ -1,0 +1,17 @@
+- name: 检查在/etc/login.defs文件中定义的LASTLOG_ENAB内容
+  shell: grep LASTLOG_ENAB /etc/login.defs
+  register: user_LASTLOG_ENAB
+  ignore_errors: yes
+- name: 显示在/etc/login.defs文件中定义的LASTLOG_ENAB内容
+  debug:
+    msg: "{{ user_LASTLOG_ENAB.stdout }}"    
+        
+
+- name: 检查在/etc/login.defs文件中定义的FAILLOG_ENAB内容
+  shell: grep FAILLOG_ENAB /etc/login.defs
+  register: user_FAILLOG_ENAB
+  ignore_errors: yes
+- name: 显示在/etc/login.defs文件中定义的FAILLOG_ENAB内容
+  debug:
+    msg: "{{ user_FAILLOG_ENAB.stdout }}"    
+               

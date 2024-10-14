@@ -1,0 +1,6 @@
+---
+
+- name: 停止nginx服务
+  systemd: name=nginx state=stopped 
+- import_tasks: status.yml
+

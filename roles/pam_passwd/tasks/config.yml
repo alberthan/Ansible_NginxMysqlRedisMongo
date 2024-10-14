@@ -1,0 +1,24 @@
+- name: 在/etc/pam.d/passwd配置使用pam_pwquality.so模块，并在/etc/security/pwquality.conf配置口令复杂度
+  block:
+    - name: 在/etc/pam.d/passwd配置使用pam_pwquality.so模块
+      lineinfile:
+        path: /etc/pam.d/passwd
+        insertafter: EOF
+        line: 'password required pam_pwquality.so retry=3'
+        backup: yes
+      ignore_errors: yes
+      tags: pam_pwquality
+    - name: 在/etc/security/pwquality.conf配置口令复杂度（小写lcredit、大写ucredit、数字dcredit、特殊字符ocredit）
+      lineinfile:
+        path: /etc/security/pwquality.conf
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        backup: yes
+      loop:
+        - {regexp: '^lcredit', line: 'lcredit = 1'}
+        - {regexp: '^ucredit', line: 'ucredit = 1'}
+        - {regexp: '^dcredit', line: 'dcredit = 1'}
+        - {regexp: '^ocredit', line: 'ocredit = 1'}
+      ignore_errors: yes
+      tags: password 
+- import_tasks: check.yml

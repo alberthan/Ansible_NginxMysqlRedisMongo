@@ -1,0 +1,5 @@
+---
+
+- name: 启动nginx
+  systemd: name=nginx state=started enabled=yes
+- import_tasks: status.yml

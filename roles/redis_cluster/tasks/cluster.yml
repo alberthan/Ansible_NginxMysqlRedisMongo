@@ -1,0 +1,4 @@
+---
+- name: 创建集群
+  shell: echo yes | /opt/redis/bin/redis-cli -a {{ redis_passwd }} --cluster create {{ play_hosts[0] }}:6379  {{ play_hosts[0] }}:6389 {{ play_hosts[1] }}:6379 {{ play_hosts[1] }}:6389 {{ play_hosts[2] }}:6379 {{ play_hosts[2] }}:6389 --cluster-replicas 1
+  when: cluster_command_host is defined

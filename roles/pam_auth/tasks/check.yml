@@ -1,0 +1,21 @@
+- name:  检查/etc/pam.d/system-auth文件认证配置情况
+  shell: |
+    #!/bin/bash
+    r=$(cat /etc/pam.d/system-auth)
+    printf '%s\n' "$r"
+  register: system_auth_output
+  ignore_errors: yes
+- name: 显示/etc/pam.d/system-auth文件认证配置情况
+  debug: 
+    msg: "{{ system_auth_output.stdout_lines }}"
+
+- name:  检查/etc/pam.d/password-auth文件认证配置情况
+  shell: |
+    #!/bin/bash
+    r=$(cat /etc/pam.d/password-auth)
+    printf '%s\n' "$r"
+  register: password_auth_output
+  ignore_errors: yes
+- name: 显示/etc/pam.d/password-auth文件认证配置情况
+  debug: 
+    msg: "{{ password_auth_output.stdout_lines }}"

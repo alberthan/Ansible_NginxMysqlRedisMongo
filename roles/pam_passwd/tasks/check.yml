@@ -1,0 +1,30 @@
+- name:  检查在/etc/pam.d/passwd是否配置使用pam_pwquality.so模块
+  shell: grep pam_pwquality.so /etc/pam.d/passwd
+  register: pam_pwquality_output
+  ignore_errors: yes
+  tags: pam_pwquality
+- name: 显示在/etc/pam.d/passwd是否配置使用pam_pwquality.so模块
+  debug: 
+    var: pam_pwquality_output.stdout_lines
+  tags: pam_pwquality
+  
+  
+- name:  检查在/etc/security/pwquality.conf关于口令复杂度（小写lcredit、大写ucredit、数字dcredit、特殊字符ocredit）配置情况
+  shell: grep '{{ item }}' /etc/security/pwquality.conf
+  with_items:
+    - '^lcredit'
+    - '^ucredit'
+    - '^dcredit'
+    - '^ocredit'
+  register: pam_passwd_output
+  ignore_errors: yes
+  loop_control:
+    label: "{{ item }}"
+  tags: password
+- name: 显示在/etc/security/pwquality.conf关于口令复杂度（小写lcredit、大写ucredit、数字dcredit、特殊字符ocredit）配置情况
+  debug:
+    var: item.stdout_lines
+  loop: "{{ pam_passwd_output.results }}"
+  loop_control:
+    label: "{{ item.item }}"
+  tags: password

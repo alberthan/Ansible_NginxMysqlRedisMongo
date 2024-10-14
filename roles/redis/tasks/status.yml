@@ -1,0 +1,10 @@
+- name: 获取redis服务状态
+  shell: |
+    #!/bin/bash
+    r=`systemctl status redis| grep Active`
+    echo $r
+  register: redis_status
+
+- name: 查看redis服务状态
+  debug: var=redis_status.stdout_lines verbosity=0
+

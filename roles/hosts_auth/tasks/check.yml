@@ -1,0 +1,21 @@
+- name: 检查在/etc/hosts.allow文件中定义的允许访问本地服务的远程主机或主机范围配置
+  shell: cat /etc/hosts.allow
+  register: hosts_allow_output
+  ignore_errors: yes
+  tags: hosts_allow   
+  
+- name: 显示在/etc/hosts.allow文件中定义的允许访问本地服务的远程主机或主机范围配置
+  debug:
+    msg: "{{ hosts_allow_output.stdout_lines }}"
+  tags: hosts_allow     
+        
+        
+- name: 检查在/etc/hosts.deny文件中定义的允许访问本地服务的远程主机或主机范围配置
+  shell: cat /etc/hosts.deny
+  register: hosts_deny_output
+  ignore_errors: yes
+  tags: hosts_deny
+- name: 显示在/etc/hosts.deny文件中定义的允许访问本地服务的远程主机或主机范围配置
+  debug:
+    msg: "{{ hosts_deny_output.stdout_lines }}"
+  tags: hosts_deny     

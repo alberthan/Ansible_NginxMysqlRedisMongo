@@ -1,0 +1,23 @@
+---
+- name: 创建/tmp/jixian基线检查存在脚本目录
+  file:
+    path: /tmp/jixian
+    state: directory
+- name:  复制数据库基线检查脚本文件到/tmp/jixian
+  copy:
+    src: '{{ item }}'
+    dest: /tmp/jixian
+  loop: 
+    - check_database_mysql_linux.pl
+    - check_database_mysql_linux.sh
+- name: 在/tmp/jixian目录下执行数据库基线检查命令
+  shell: sh check_database_mysql_linux.sh  "{{ inventory_hostname }}" "{{ mysql_passwd }}" "{{ mysql_user }}" "{{ mysql_port }}" null
+  args: 
+    chdir: /tmp/jixian/
+- name: 将数据库基线检查产生的结果文件拉取到本地的/tmp/jixian/目录
+  fetch:
+    src: /tmp/jixian/{{ inventory_hostname }}_linux_mysql_chk.xml
+    dest: /tmp/jixian/
+    flat: yes
+
+- import_tasks: check.yml

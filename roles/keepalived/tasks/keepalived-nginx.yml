@@ -1,0 +1,32 @@
+---
+- name: 安装keepalived
+  shell: yum install -y keepalived
+
+- name: 获取网卡名
+  shell: ip add | grep {{ inventory_hostname }}| awk '{print $NF}'
+  register: interface
+  tags: config
+
+- name: 复制sysconfig文件
+  template:
+    src: sysconfig/keepalived
+    dest: /etc/sysconfig/
+    mode: 0644
+
+- name: 复制keepalived配置文件
+  template:
+    src: keepalived.conf
+    dest: /etc/keepalived/
+    mode: 0644
+  tags: config
+  notify: reload keepalived
+   
+- name: 复制nginx检查脚本
+  copy:
+    src: check_nginx.sh
+    dest: /etc/keepalived/check_nginx.sh
+    mode: '0755'
+  tags: nginx
+
+- import_tasks: start.yml
+- import_tasks: status.yml

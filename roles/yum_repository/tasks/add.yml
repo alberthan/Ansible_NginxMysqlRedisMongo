@@ -1,0 +1,11 @@
+---
+- name: 新增名为yumlocal的yum存储库
+  yum_repository:
+    name: yumlocal
+    description: yumlocal
+    file: yumlocal
+    baseurl: https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
+    gpgcheck: no
+    enabled: yes
+  notify: yum-clean-metadata
+- import_tasks: check.yml

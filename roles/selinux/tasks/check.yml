@@ -1,0 +1,7 @@
+- name:  检查selinux服务运行情况
+  shell: getenforce
+  register: selinux_output
+  ignore_errors: yes
+- name: 显示selinux服务运行情况
+  debug: 
+    msg: "{{ selinux_output.stdout_lines }}"

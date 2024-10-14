@@ -1,0 +1,21 @@
+- name: 检查/etc/rsyslog.conf文件中关于messages文件定义的日志记录设置
+  shell:   grep -E '^[^#].*messages$' /etc/rsyslog.conf
+  register: adm_messages_output
+  ignore_errors: yes
+  tags: adm_messages
+- name: 显示/etc/rsyslog.conf文件中关于messages文件定义的日志记录设置
+  debug:
+    msg: "{{ adm_messages_output.stdout_lines }}"
+  tags: adm_messages
+  
+
+- name: 检查/var/log/messages文件隐藏权限设置情况
+  shell:   lsattr /var/log/messages
+  register: messages_output
+  ignore_errors: yes
+  tags: chattr_messages
+
+- name: 显示/var/log/messages文件隐藏权限设置情况
+  debug:
+    msg: "{{ messages_output.stdout_lines }}"
+  tags: chattr_messages

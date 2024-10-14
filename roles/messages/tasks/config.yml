@@ -1,0 +1,26 @@
+- name: 创建安全事件日志接收目录及文件/var/adm/messages并在/etc/rsyslog.conf文件中配置*.err;kern.debug;daemon.notice类的日志记录到/var/adm/messages文件
+  block: 
+    - name: 创建安全事件日志接收目录及文件/var/adm/messages
+      file: 
+        path: /var/adm/messages 
+        state: touch 
+        mode: 0640
+
+    - name: 在/etc/rsyslog.conf文件中配置*.err;kern.debug;daemon.notice类的日志记录到/var/adm/messages文件
+      lineinfile:
+        path: /etc/rsyslog.conf
+        insertafter: 'EOF'
+        line: '*.err;kern.debug;daemon.notice /var/adm/messages'
+        backup: yes
+      notify: restart rsyslog
+      ignore_errors: yes
+  tags: adm_messages
+
+
+
+- name: 设置关键文件的属性，配置/var/log/messages文件只可追加不可修改
+  shell: chattr +a /var/log/messages
+  ignore_errors: yes
+  tags: chattr_messages
+  
+- import_tasks: check.yml

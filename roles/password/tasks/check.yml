@@ -1,0 +1,16 @@
+- name:  检查在/etc/login.defs文件中关于口令生存周期最长PASS_MAX_DAYS，最小PASS_MIN_DAYS及密码最小长度PASS_MIN_LEN配置情况
+  shell: grep '{{ item }}' /etc/login.defs
+  with_items:
+    - '^PASS_MIN_LEN'
+    - '^PASS_MAX_DAYS'
+    - '^PASS_MIN_DAYS'
+  register: password_output
+  ignore_errors: yes
+  loop_control:
+    label: "{{ item }}"
+- name: 显示检查在/etc/login.defs文件中关于口令生存周期最长PASS_MAX_DAYS，最小PASS_MIN_DAYS及密码最小长度PASS_MIN_LEN配置情况
+  debug:
+    var: item.stdout_lines
+  loop: "{{ password_output.results }}"
+  loop_control:
+    label: "{{ item.item }}"

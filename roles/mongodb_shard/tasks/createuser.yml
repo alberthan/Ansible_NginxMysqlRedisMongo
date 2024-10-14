@@ -1,0 +1,27 @@
+---
+- name: mongos中创建一个名为{{ mongodb_admin }}的超级管理员账号（角色为root）
+  when: mongos is defined
+  shell:
+    cmd: |
+      /opt/mongodb/bin/mongo --port 30000 << EOF
+      use admin
+      db.createUser({user:"{{ mongodb_admin }}",pwd:"{{ mongodb_admin_pass }}",roles:[{"role":"root","db":"admin"}]})
+      EOF
+  tags: mongos
+  run_once: true
+
+- name: shardserver中创建一个名为{{ mongodb_admin }}的超级管理员账号（角色为root）
+  when: shardserver is defined
+  shell:
+    cmd: |
+      /opt/mongodb/bin/mongo --port {{ item }} << EOF
+      use admin
+      db.createUser({user:"{{ mongodb_admin }}",pwd:"{{ mongodb_admin_pass }}",roles:[{"role":"root","db":"admin"}]})
+      EOF
+  with_items:
+    - 27001
+    - 27002
+    - 27003
+    
+  tags: shardserver
+  run_once: true

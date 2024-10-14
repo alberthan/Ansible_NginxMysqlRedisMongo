@@ -1,0 +1,5 @@
+---
+
+- name: 停止configserver
+  when: configserver is defined
+  shell: echo -e "use admin;\ndb.shutdownServer();\nexit;" | /opt/mongodb/bin/mongo --port 27000 -u {{ mongodb_admin}} -p {{ mongodb_admin_pass }} 

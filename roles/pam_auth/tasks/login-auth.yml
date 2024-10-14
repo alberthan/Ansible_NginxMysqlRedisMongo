@@ -1,0 +1,15 @@
+- name: system-auth文件中配置口令复杂度并限制到root
+  lineinfile:
+    path: /etc/pam.d/system-auth
+    regexp: '^password\s+requisite\s+pam_pwquality.so'
+    line: 'password    requisite     pam_pwquality.so minlen=8 minclass=3 enforce_for_root try_first_pass local_users_only retry=3 dcredit=1 ucredit=1 lcredit=1 ocredit=1'
+    backup: yes
+  ignore_errors: yes
+- name: password-auth文件中配置口令复杂度并限制到root
+  lineinfile:
+    path: /etc/pam.d/password-auth
+    regexp: '^password\s+requisite\s+pam_pwquality.so'
+    line: 'password    requisite     pam_pwquality.so minlen=8 minclass=3 enforce_for_root try_first_pass local_users_only retry=3 dcredit=1 ucredit=1 lcredit=1 ocredit=1'
+    backup: yes
+  ignore_errors: yes
+- import_tasks: check.yml

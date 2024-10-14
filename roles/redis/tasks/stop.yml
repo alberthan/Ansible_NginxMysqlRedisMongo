@@ -1,0 +1,6 @@
+---
+
+- name: 停止redis
+  systemd: name=redis state=stopped enabled=yes  
+
+- import_tasks: status.yml

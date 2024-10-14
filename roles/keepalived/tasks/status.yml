@@ -1,0 +1,19 @@
+---
+
+- name: 获取keepalived服务状态
+  shell: |
+    #!/bin/bash
+    r=`systemctl status keepalived| grep Active`
+    echo $r
+  register: keepalived_status
+
+- name: 检查keepalived服务状态
+  debug: var=keepalived_status.stdout verbosity=0
+
+- name: 获取节点ip情况
+  shell: ip addr
+  register: ipaddr_output
+  ignore_errors: yes
+- name: 显示节点vip情况
+  debug:
+    msg: "{{ ipaddr_output.stdout_lines }}" 

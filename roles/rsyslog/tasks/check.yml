@@ -1,0 +1,8 @@
+- name:  检查/etc/rsyslog.conf文件中对authpriv类的日志记录配置情况
+  shell: grep ^authpriv /etc/rsyslog.conf
+  register: rsyslog_output
+  ignore_errors: yes
+  tags: rsyslog
+- name: 显示/etc/rsyslog.conf文件中对authpriv类的日志记录配置情况
+  debug:
+    msg: "{{ rsyslog_output.stdout_lines }}" 

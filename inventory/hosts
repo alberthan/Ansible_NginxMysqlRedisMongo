@@ -1,0 +1,44 @@
+[all:vars]
+
+# ansible_ssh_pass: 主机密码
+# ansible_user: 主机账号
+
+ansible_become=true
+ansible_ssh_pass=123456
+ansible_ssh_user=ruanbo
+ansible_become_pass=123456
+ansible_become_user=root
+ansible_become_method=sudo
+chapass=12345678
+
+[test]
+#192.168.10.131 chapass=12345678 #ansible_python_interpreter=/usr/bin/python3
+
+[nginx]
+192.168.10.150 keepalived_role=BACKUP
+192.168.10.151 keepalived_role=BACKUP
+
+[keepalived]
+192.168.10.150 keepalived_role=BACKUP system=euler
+192.168.10.151 keepalived_role=BACKUP system=euler
+
+[mysql]
+192.168.10.150 master=true
+192.168.10.151 slave=true
+
+[redis]
+192.168.10.150
+192.168.10.151
+192.168.10.152
+
+[redis_cluster]
+192.168.10.150 cluster_command_host=true
+192.168.10.151
+192.168.10.152
+
+[mongodb]
+192.168.10.150 mongos=true configserver=true shardserver=true
+192.168.10.151 mongos=true configserver=true shardserver=true
+192.168.10.152 mongos=true configserver=true shardserver=true 
+
+

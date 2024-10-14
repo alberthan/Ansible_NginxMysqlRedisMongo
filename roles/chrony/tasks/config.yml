@@ -1,0 +1,11 @@
+- name: 配置chronyd时钟同步服务器为{{ ntp_server }} 
+  lineinfile:
+    path: /etc/chrony.conf
+    state: present
+    regexp: '^server {{ ntp_server }} iburst'
+    line: "server {{ ntp_server }} iburst"
+    backup: yes
+  notify: restart chronyd    
+  ignore_errors: yes  
+  
+- import_tasks: check.yml

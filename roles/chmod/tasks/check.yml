@@ -1,0 +1,7 @@
+- name:  检查/etc/security文件权限
+  shell: getfacl /etc/security/
+  register: chmod_output
+  ignore_errors: yes
+- name: 查看/etc/security文件权限
+  debug:
+    msg: "{{ chmod_output.stdout_lines }}" 

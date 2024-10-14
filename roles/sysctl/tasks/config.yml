@@ -1,0 +1,14 @@
+- name: 配置lo网卡禁止IP源路由net.ipv4.conf.lo.accept_source_route=0
+  sysctl:
+    name: net.ipv4.conf.lo.accept_source_route
+    value: '0'
+    sysctl_set: yes
+    state: present
+- name: 配置启用路由转发net.ipv4.ip_forward=1
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+- import_tasks: check.yml

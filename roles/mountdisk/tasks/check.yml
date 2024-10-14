@@ -1,0 +1,8 @@
+- name:  检查磁盘/dev/{{ disk_mount }}挂载情况
+  shell: df -Th
+  register: disk_output
+  ignore_errors: yes
+  
+- name: 显示磁盘/dev/{{ disk_mount }}挂载情况
+  debug:
+    msg: "{{ disk_output.stdout_lines }}"

@@ -1,0 +1,18 @@
+- name:  在/etc/motd文件中配置系统banner提示信息
+  lineinfile:
+    path: /etc/motd
+    line: 'Authorized users only. All activity may be monitored and reported'
+    backup: yes
+  ignore_errors: yes
+- name: 在/etc/issue文件中配置系统banner提示信息
+  lineinfile:
+    path: /etc/issue
+    line: 'Authorized users only. All activity may be monitored and reported'
+  ignore_errors: yes
+- name: 在/etc/issue.net文件中配置系统banner提示信息
+  lineinfile:
+    path: /etc/issue.net
+    line: 'Authorized users only. All activity may be monitored and reported'
+  ignore_errors: yes
+
+- import_tasks: check.yml

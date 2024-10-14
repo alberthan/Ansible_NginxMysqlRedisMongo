@@ -1,0 +1,5 @@
+- name: 安装yum仓库中最新版本的redis
+  dnf:
+    name: redis
+    state: latest
+- import_tasks: start.yml

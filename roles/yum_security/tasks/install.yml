@@ -1,0 +1,13 @@
+---
+
+- name: 为RHEL5系列版本安装安全插件yum-security
+  yum: 
+    name: yum-security
+    state: latest
+  when: ansible_distribution == "RedHat" and ansible_distribution_major_version == "5"	 
+- name: 为RHEL6系列版本安装安全插件yum-plugin-security
+  yum: 
+    name: yum-plugin-security
+    state: latest
+  when: ansible_distribution == "RedHat" and ansible_distribution_major_version == "6"
+- import_tasks: check.yml

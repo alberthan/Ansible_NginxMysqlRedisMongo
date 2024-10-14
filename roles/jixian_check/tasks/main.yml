@@ -1,0 +1,4 @@
+---
+# tasks file for jixian_check
+
+- import_tasks: "{{ operation }}.yml"

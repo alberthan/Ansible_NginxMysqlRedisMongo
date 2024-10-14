@@ -1,0 +1,29 @@
+---
+- name: 定义存放备份文件的目录
+  set_fact:
+    backup_dir: "/tmp/backup/"
+    
+- name: 确保备份目录存在,如果不存在则创建
+  file:
+    path: "{{ backup_dir }}"
+    state: directory
+    mode: '0755'
+    
+- name: 定义时间格式为"YYYY-MM-DD"
+  command: date +"%F"
+  register: datetime
+
+- name: 对/etc/*及/var/log/*进行压缩备份并存储在{{ backup_dir }}目录下
+  archive:
+    path:
+    - /etc/*
+    - /var/log/*
+    dest: "{{ backup_dir }}/etc-varbak{{datetime.stdout}}.tar.bz2"
+    format: bz2
+
+- name: 将备份文件从远程主机拉取到Ansible控制机器{{ backup_dir }}目录下
+  fetch:
+    src: "{{ backup_dir }}/etc-varbak{{datetime.stdout}}.tar.bz2"
+    dest: "{{ backup_dir }}/{{ inventory_hostname }}/"
+    flat: yes
+- import_tasks: check.yml

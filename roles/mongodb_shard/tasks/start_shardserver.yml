@@ -1,0 +1,8 @@
+---
+- name: 启动shard
+  when: shardserver is defined
+  shell: /opt/mongodb/bin/mongod -f /data/mongodb/{{ item }}/conf/shard.conf
+  with_items:
+    - shard1
+    - shard2
+    - shard3

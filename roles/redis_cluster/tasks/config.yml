@@ -1,0 +1,25 @@
+---
+- name: 下发配置
+  template:
+    src: redis.conf
+    dest: /opt/redis/cluster-conf/{{item.port}}/redis.conf
+  with_items:
+    - { role: 'master', port: '6379' }
+    - { role: 'slave', port: '6389' }
+
+- name: 下发redis1 service配置
+  copy:
+    src: "redis1.service"
+    dest: "/etc/systemd/system/"
+  tags: redis1
+
+- name: 下发redis2 service配置
+  copy:
+    src: "redis2.service"
+    dest: "/etc/systemd/system/"
+  tags: redis2
+
+- name: systemd daemon-reload
+  systemd:
+    daemon_reload: yes
+  tags: reload

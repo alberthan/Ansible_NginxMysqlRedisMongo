@@ -1,0 +1,8 @@
+- name: 配置限制除wheel组以外的用户通过su命令切换到root
+  lineinfile:
+    path: /etc/pam.d/su
+    regexp: '^auth\s*required\s*pam_wheel.so\suse_uid'
+    line: 'auth           required        pam_wheel.so use_uid'
+    backup: yes
+  ignore_errors: yes
+- import_tasks: check.yml

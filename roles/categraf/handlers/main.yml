@@ -1,0 +1,4 @@
+---
+- name: restart categraf
+  systemd: daemon_reload=yes name=categraf state=restarted
+  become: yes

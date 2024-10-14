@@ -1,0 +1,22 @@
+- name: 创建/etc/ssh_banner文件，设置ssh登录前警告Banner内容
+  copy:
+    content: 'Authorized users only. All activity may be monitored and reported'
+    dest: /etc/ssh_banner
+    mode: '0644'
+    owner: bin
+    group: bin
+    backup: yes
+  ignore_errors: yes
+  tags: ssh_banner
+  
+- name: 在/etc/ssh/sshd_config配置文件中应用/etc/ssh_banner配置
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    state: present
+    regexp: '^Banner\s'
+    line: 'Banner /etc/ssh_banner'
+    backup: yes
+  ignore_errors: yes
+  notify: restart sshd
+  tags: ssh_banner
+- import_tasks: check.yml

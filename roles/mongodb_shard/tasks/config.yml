@@ -1,0 +1,47 @@
+---
+- name: 下发shard配置文件
+  when: shardserver is defined
+  template:
+    src: shard.conf
+    dest: /data/mongodb/{{ item.shard }}/conf/shard.conf
+    mode: 0644
+  with_items:
+    - { shard: 'shard1', port: '27001'}
+    - { shard: 'shard2', port: '27002'}
+    - { shard: 'shard3', port: '27003'}
+
+- name: 下发configserver配置文件
+  when: configserver is defined
+  template:
+    src: configserver.conf
+    dest: /data/mongodb/configserver/conf/configserver.conf
+    mode: 0644
+
+- name: 下发mongos配置文件
+  when: mongos is defined
+  template:
+    src: mongos.conf
+    dest: /data/mongodb/mongos/conf/mongos.conf
+    mode: 0644
+
+- import_tasks: start_configserver.yml
+- import_tasks: configserver_init.yml
+
+- import_tasks: start_shardserver.yml
+- import_tasks: shardserver_init.yml
+
+- import_tasks: start_mongos.yml
+- import_tasks: mongos_init.yml
+
+- import_tasks: createuser.yml
+
+- import_tasks: status.yml
+- import_tasks: cluster_status.yml
+
+
+
+
+
+
+
+

@@ -1,0 +1,17 @@
+---
+- name: 启动redis1
+  service:
+    name: redis1
+    state: started
+    enabled: yes
+  tags: master
+  
+- name: 启动redis2
+  service:
+    name: redis2
+    state: started
+    enabled: yes
+  tags: slave
+
+- import_tasks: status.yml
+- import_tasks: cluster_status.yml

@@ -1,0 +1,25 @@
+- name: 在/etc/hosts.allow文件中定义允许访问本地服务的远程主机或主机范围
+  lineinfile:
+    path: /etc/hosts.allow
+    insertafter: 'EOF'
+    line: "{{ item }}"
+    backup: yes
+  ignore_errors: yes
+  loop: 
+    - 'sshd: all'
+    - 'telnetd: all'
+  tags: hosts_allow
+  
+- name: 在/etc/hosts.deny文件中定义禁止访问本地服务的远程主机或主机范围。
+  lineinfile:
+    path: /etc/hosts.deny
+    insertafter: 'EOF'
+    line: "{{ item }}"
+    backup: yes
+  ignore_errors: yes
+  loop: 
+    - 'sshd: 192.168.182.2'
+    - 'telnetd: 192.168.182.2'
+  tags: hosts_deny
+  
+- import_tasks: check.yml

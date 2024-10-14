@@ -1,0 +1,8 @@
+---
+
+- name: 启动categraf
+  systemd: name=categraf state=started enabled=yes
+  become: yes
+
+- import_tasks: status.yml
+

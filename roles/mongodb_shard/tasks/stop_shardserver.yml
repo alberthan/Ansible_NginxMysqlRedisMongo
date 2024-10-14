@@ -1,0 +1,10 @@
+---
+- name: 停止shard1、shard2、shard3实例服务
+ # when: shardserver is defined
+  shell: | 
+    echo -e "use admin;\ndb.shutdownServer();\nexit;" | /opt/mongodb/bin/mongo --host {{ inventory_hostname }} --port {{ item }} -u {{ mongodb_admin}} -p {{ mongodb_admin_pass }}
+    sleep 10
+  with_items:
+    - 27001
+    - 27002
+    - 27003

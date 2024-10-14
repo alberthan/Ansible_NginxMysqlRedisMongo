@@ -1,0 +1,23 @@
+---
+- name: 生成一个12位数的随机密码
+  shell: </dev/urandom tr -dc 'A-Za-z0-9!#$%^&' | head -c 12
+  register: chapass
+  delegate_to: localhost
+  
+- name: 创建{{ user_name }}用户并设置密码，如果用户存在则修改密码
+  user:
+    name: "{{ user_name }}"
+    password: "{{ chapass.stdout | string | password_hash('sha512') }}"
+    state: present
+    update_password: always
+
+- name: 存储{{ user_name }}用户密码信息到{{ password_file }}文件
+  lineinfile:
+    path: "{{ password_file }}"
+    regexp: '^{{ inventory_hostname }}:{{ user_name }}:'
+    line: "{{ inventory_hostname }}:{{ user_name }}:{{ chapass.stdout }}"
+    create: yes
+    mode: '0600'
+  delegate_to: localhost
+  
+- import_tasks: check.yml

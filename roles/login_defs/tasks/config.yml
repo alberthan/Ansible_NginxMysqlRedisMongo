@@ -1,0 +1,11 @@
+- name: 在/etc/login.defs文件中配置1、LASTLOG_ENAB：启用对用户的最后一次登录信息的记录。 2、FAILLOG_ENAB：启用对用户失败登录尝试的记录
+  lineinfile:
+    path: /etc/login.defs
+    insertafter: 'EOF'
+    line: "{{ item }}"
+    backup: yes
+  ignore_errors: yes
+  with_items:
+    - "LASTLOG_ENAB yes"
+    - "FAILLOG_ENAB yes"
+- import_tasks: check.yml

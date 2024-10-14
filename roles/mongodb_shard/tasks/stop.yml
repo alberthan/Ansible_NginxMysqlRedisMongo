@@ -1,0 +1,8 @@
+---
+- import_tasks: stop_mongos.yml
+
+- import_tasks: stop_shardserver.yml
+
+- import_tasks: stop_configserver.yml
+
+- import_tasks: status.yml

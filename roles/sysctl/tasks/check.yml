@@ -1,0 +1,18 @@
+- name:  检查lo网卡net.ipv4.conf.lo.accept_source_route参数配置
+  shell: sysctl net.ipv4.conf.lo.accept_source_route
+  register: lo_accept_source_route_output
+  ignore_errors: yes
+- name: 显示lo网卡net.ipv4.conf.lo.accept_source_route参数配置
+  debug:
+    msg: "{{ lo_accept_source_route_output.stdout }}" 
+ 
+ 
+- name:  检查net.ipv4.ip_forward参数配置
+  shell: sysctl net.ipv4.ip_forward
+  register: ip_forward_output
+  ignore_errors: yes
+- name: 显示net.ipv4.ip_forward参数配置
+  debug:
+    msg: "{{ ip_forward_output.stdout }}" 
+ 
+ 

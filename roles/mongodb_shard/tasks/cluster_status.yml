@@ -1,0 +1,10 @@
+- name: 获取集群状态
+  when: mongos is defined
+  shell: /opt/mongodb/bin/mongo --host {{ play_hosts[0] }} --port 30000 -u {{ mongodb_admin}} -p {{ mongodb_admin_pass }} --eval 'printjson(sh.status())'
+  register: cluster_status
+  run_once: true
+
+- name: 集群状态
+  debug: var=cluster_status.stdout_lines verbosity=0
+  run_once: true
+  

@@ -1,0 +1,56 @@
+---
+- name: 创建数据目录/data/redis/
+  file:
+    path: '/data/redis/{{item.role}}/log'
+    state: 'directory'
+  with_items:
+    - { role: 'master' }
+    - { role: 'slave' }
+
+- name: 创建配置文件目录/opt/redis/cluster-conf/
+  file:
+    path: '/opt/redis/cluster-conf/{{item.port}}'
+    state: 'directory'
+  with_items:
+    - { port: '6379' }
+    - { port: '6389' }
+
+- name: 创建解压目录/tmp/redis
+  file:
+    path: '/tmp/redis'
+    state: 'directory'
+
+- name: 解压压缩包
+  unarchive:
+     src: 'files/redis-7.0.0.tar.gz'
+     dest: '/tmp/redis'
+- name: 安装gcc、make
+  shell: yum install gcc make -y
+  ignore_errors: true  
+
+- name: 编译安装redis到/opt/redis目录
+  shell: cd /tmp/redis/redis-7.0.0 && make install PREFIX=/opt/redis
+
+- name: 检查环境变量
+  shell: grep redis /etc/profile
+  ignore_errors: true
+  register: redispath
+
+- name: /etc/profile添加redis环境变量export PATH=$PATH:/opt/redis/bin/
+  when: redispath.stdout == ""
+  shell: |
+    echo 'export PATH=$PATH:/opt/redis/bin/' >> /etc/profile
+
+- import_tasks: config.yml
+
+- import_tasks: start.yml
+
+- name: redis实例启动中
+  shell: sleep 5
+
+- import_tasks: cluster.yml
+
+- name: redis集群启动中
+  shell: sleep 30
+
+- import_tasks: cluster_status.yml

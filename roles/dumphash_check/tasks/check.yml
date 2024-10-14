@@ -1,0 +1,10 @@
+---
+- name:  检查安全检查执行结果文件
+  shell:  ls -l /tmp/filehash.res
+  register: DumpHash_output
+  ignore_errors: yes
+- name: 显示安全检查执行结果文件
+  debug:
+    msg: "{{ DumpHash_output.stdout_lines }}" 
+ 
+ 

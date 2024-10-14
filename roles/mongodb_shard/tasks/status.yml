@@ -1,0 +1,28 @@
+---
+
+- name: 获取shard状态
+  when: shardserver is defined
+  shell: ps -ef | grep shard
+  register: shard_status
+
+- name: shard状态
+  when: shardserver is defined
+  debug: var=shard_status.stdout_lines verbosity=0
+
+- name: 获取mongos状态
+  when: mongos is defined
+  shell: ps -ef | grep mongos
+  register: mongos_status
+
+- name: mongos状态
+  when: mongos is defined
+  debug: var=mongos_status.stdout_lines verbosity=0
+
+- name: 获取configserver状态
+  when: configserver is defined
+  shell: ps -ef | grep configserver
+  register: configserver_status
+
+- name: configserver状态
+  when: configserver is defined
+  debug: var=configserver_status.stdout_lines verbosity=0

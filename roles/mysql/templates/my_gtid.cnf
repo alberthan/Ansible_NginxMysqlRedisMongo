@@ -1,0 +1,25 @@
+[mysqld]
+user=mysql
+datadir=/data/mysql/data
+socket=/data/mysql/tmp/mysql.sock
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+# Settings user and group are ignored when systemd is used.
+# If you need to run mysqld under a different user or group,
+# customize your systemd unit file for mariadb according to the
+# instructions in http://fedoraproject.org/wiki/Systemd
+
+{% if master is defined %}
+server-id=100
+{% else %}
+server-id=101
+{% endif %}
+gtid_mode=on
+enforce_gtid_consistency=1
+binlog_format=row
+
+log_bin=/data/mysql/binlog/binlog
+log-error=/data/mysql/log/mysqld.log
+slow_query_log=1
+slow_query_log_file=/data/mysql/log/slow.log
+pid-file=/data/mysql/tmp/mysqld.pid

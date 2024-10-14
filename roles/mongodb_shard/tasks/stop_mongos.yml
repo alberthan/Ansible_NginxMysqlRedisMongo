@@ -1,0 +1,7 @@
+---
+- name: 停止mongos
+
+  when: mongos is defined 
+  shell: | 
+    echo -e "use admin;\ndb.shutdownServer();\nexit;" | /opt/mongodb/bin/mongo --port 30000 -u {{ mongodb_admin}} -p {{ mongodb_admin_pass }} 
+    sleep 10

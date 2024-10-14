@@ -1,0 +1,18 @@
+---
+- name: 获取master状态
+  shell: |
+    r=`systemctl status redis1| grep Active`
+    echo $r
+  register: master_status
+
+- name: master状态
+  debug: var=master_status.stdout verbosity=0
+
+- name: 获取slave状态
+  shell: |
+    rs=`systemctl status redis2| grep Active`
+    echo $rs
+  register: slave_status
+
+- name: slave状态
+  debug: var=slave_status.stdout verbosity=0

@@ -1,0 +1,4 @@
+---
+- name: 启动keepalived服务
+  systemd: daemon_reload=yes name=keepalived state=started
+- import_tasks: status.yml

@@ -1,0 +1,10 @@
+- name: 配置禁止root用户通过SSH进行远程登录
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^PermitRootLogin'
+    line: 'PermitRootLogin no'
+    backup: yes
+  notify: restart sshd
+  ignore_errors: yes
+  tags: PermitRootLogin
+- import_tasks: check.yml

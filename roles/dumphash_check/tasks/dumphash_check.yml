@@ -1,0 +1,22 @@
+---
+- name: 复制安全检查脚本DumpHash文件到程序运行根目录/app
+  copy:
+    src: '{{ item }}'
+    dest: /app
+    owner: app
+    group: app
+    mode: 0750
+  loop: 
+    - DumpHash
+    
+- name: 在程序根目录/app下运行DumpHash文件执行安全检查
+  shell: ./DumpHash
+  args: 
+    chdir: /app
+- name: 将安全检查产生的结果文件拉取到本地的/tmp/jixian/DumpHash/目录
+  fetch:
+    src: /tmp/filehash.res
+    dest: /tmp/jixian/DumpHash/{{ inventory_hostname }}_filehash.res
+    flat: yes
+
+- import_tasks: check.yml

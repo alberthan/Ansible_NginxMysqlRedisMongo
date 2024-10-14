@@ -1,0 +1,9 @@
+- name:  检查chronyd时钟同步服务器配置
+  shell: chronyc sources -v
+  register: chronyd_output
+  ignore_errors: yes
+  
+- name: 显示chronyd时钟同步服务器配置
+  debug:
+    msg: "{{ chronyd_output.stdout_lines }}"
+        

@@ -1,0 +1,9 @@
+- name: 针对root用户在/root/.bashrc文件中为ls命令设置别名ls='ls -al'
+  lineinfile:
+    path: /root/.bashrc
+    regexp: '^alias\s+ls='
+    line: "alias ls='ls -al'"
+    backup: yes
+  ignore_errors: yes
+
+- import_tasks: check.yml

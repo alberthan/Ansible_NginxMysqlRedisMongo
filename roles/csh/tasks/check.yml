@@ -1,0 +1,9 @@
+- name: 检查/etc/csh.cshrc文件中csh shell的自动超时变量autologout配置
+  shell: grep autologout /etc/csh.cshrc
+  register: autologout_output
+  ignore_errors: yes
+  
+- name: 显示/etc/csh.cshrc文件中csh shell的自动超时变量autologout配置
+  debug:
+    msg: "{{ autologout_output.stdout }}"
+        

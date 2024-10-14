@@ -1,0 +1,11 @@
+- name: 在/etc/csh.cshrc文件中设置csh shell 下的自动超时变量autologout为600s
+  lineinfile:
+    path: /etc/csh.cshrc
+    insertafter: 'EOF'
+    line: "{{ item }}"
+    backup: yes
+  ignore_errors: yes
+  with_items:
+    - "set autologout=600"
+
+- import_tasks: check.yml

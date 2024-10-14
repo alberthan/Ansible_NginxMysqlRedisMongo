@@ -1,0 +1,20 @@
+- name: 检查指定用户{{ user_name }}是否存在
+  shell: id {{ user_name }}
+  register: usercheck_output
+  ignore_errors: yes
+
+- name: 显示指定用户{{ user_name }}是否存在
+  debug:
+    msg: "{{ usercheck_output.stdout }}"
+
+- name: 检查指定用户{{ user_name }}是否配置sudo权限
+  shell: grep ^{{ user_name }} /etc/sudoers
+  register: usersudo_output
+  ignore_errors: yes
+
+    
+- name: 显示指定用户{{ user_name }}是否配置sudo权限
+  debug:
+    msg: "{{ usersudo_output.stdout_lines }}"
+
+

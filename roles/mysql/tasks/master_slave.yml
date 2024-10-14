@@ -1,0 +1,56 @@
+---
+- name: 创建主从同步账号
+  when: master is defined
+  shell: |
+      mysql -uroot -p{{ mysql_passwd }} -S /data/mysql/tmp/mysql.sock -e "CREATE USER '{{ mysql_repl_user }}'@'%' IDENTIFIED BY '{{ mysql_repl_passwd }}';"
+      mysql -uroot -p{{ mysql_passwd }} -S /data/mysql/tmp/mysql.sock -e "grant REPLICATION SLAVE, REPLICATION CLIENT on *.* to '{{ mysql_repl_user }}'@'%';"
+      mysql -uroot -p{{ mysql_passwd }} -S /data/mysql/tmp/mysql.sock -e "flush privileges;"
+  
+- name: 查看master的binlog日志名和position位置信息
+  block: 
+    - name: 查看master的binlog日志名
+      shell: mysql -u{{ mysql_repl_user }} -p{{ mysql_repl_passwd }} -h '{{ play_hosts[0] }}' -e 'show master status ;' 2>/dev/null |grep binlog |awk '{print $1}'
+      register: master_bin_log
+      
+    - name: 查看master的position位置
+      shell: mysql -u{{ mysql_repl_user }} -p{{ mysql_repl_passwd }} -h '{{ play_hosts[0] }}' -e 'show master status ;' 2>/dev/null |grep binlog |awk '{print $2}'
+      register: master_position
+      
+    - name: 打印master的binlog日志名和position位置信息
+      debug:
+        msg: "Master binlog file: {{ master_bin_log.stdout }}, Position: {{ master_position.stdout }}"
+
+  rescue:
+    - name: 错误处理
+      debug:
+        msg: "获取master的binlog日志名和position位置信息失败！！！"
+  when: replication_mode=='position' and slave is defined
+
+- name: 基于position模式创建slave与master的主从同步
+  when: replication_mode=='position' and slave is defined
+  shell: mysql -u{{ mysql_user }} -p{{ mysql_passwd }} -S /data/mysql/tmp/mysql.sock -e "
+    CHANGE MASTER TO MASTER_HOST='{{ play_hosts[0] }}',
+    MASTER_PORT={{ mysql_port }},
+    MASTER_USER='{{ mysql_repl_user }}',
+    MASTER_PASSWORD='{{ mysql_repl_passwd }}',
+    MASTER_LOG_FILE='{{ master_bin_log.stdout }}',
+    MASTER_LOG_POS={{ master_position.stdout }};"
+
+- name: 基于gtid模式创建slave与master的主从同步
+  shell: mysql -u{{ mysql_user }} -p{{ mysql_passwd }} -S /data/mysql/tmp/mysql.sock -e "
+    CHANGE MASTER TO MASTER_HOST='{{ play_hosts[0] }}',
+    MASTER_PORT={{ mysql_port }},
+    MASTER_USER='{{ mysql_repl_user }}',
+    MASTER_PASSWORD='{{ mysql_repl_passwd }}',
+    master_auto_position=1,
+    get_master_public_key=1;"
+  when: replication_mode=='gtid' and slave is defined
+
+- name: 启动slave
+  when: slave is defined
+  shell: | 
+    mysql -u{{ mysql_user }} -p{{ mysql_passwd }} -S /data/mysql/tmp/mysql.sock -e "start slave;"
+    sleep 10;
+  
+- import_tasks: show_slave_status.yml
+

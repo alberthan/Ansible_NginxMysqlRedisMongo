@@ -1,0 +1,16 @@
+---
+- name:  检查是否安装安全插件yum-security
+  shell: rpm -qa | grep yum-security
+  register: rpm_output
+  ignore_errors: yes
+  when: ansible_distribution == "RedHat" and ansible_distribution_major_version == "5"	 
+  
+- name:  检查是否安装安全插件yum-plugin-security
+  shell: rpm -qa | grep yum-plugin-security
+  register: rpm_output
+  ignore_errors: yes
+  when: ansible_distribution == "RedHat" and ansible_distribution_major_version == "6"	
+  
+- name: 显示是否安装安全插件yum-security或yum-plugin-security
+  debug: 
+    msg: "{{ rpm_output.stdout_lines }}"

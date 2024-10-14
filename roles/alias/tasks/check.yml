@@ -1,0 +1,9 @@
+---
+- name: 检查针对root用户在/root/.bashrc文件中为ls命令设置别名情况
+  shell: grep ls /root/.bashrc
+  register: alias_ls_output
+  ignore_errors: yes
+
+- name: 显示针对root用户在/root/.bashrc文件中为ls命令设置别名情况
+  debug:
+    msg: "{{ alias_ls_output.stdout }}"

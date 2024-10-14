@@ -1,0 +1,10 @@
+
+- name:  检查yum存储库配置
+  shell:  yum repolist --all
+  register: yum_repolist_output
+  ignore_errors: yes
+- name: 显示yum存储库配置
+  debug:
+    msg: "{{ yum_repolist_output.stdout_lines }}" 
+ 
+ 

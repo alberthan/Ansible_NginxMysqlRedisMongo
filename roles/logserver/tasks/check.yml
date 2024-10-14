@@ -1,0 +1,8 @@
+- name:  检查/etc/rsyslog.conf文件中是否配置{{ logserver }}为远程日志服务器地址
+  shell: grep {{ logserver }} /etc/rsyslog.conf
+  register: logserver_output
+  ignore_errors: yes
+  tags: logserver
+- name: 显示/etc/rsyslog.conf文件中是否配置{{ logserver }}为远程日志服务器地址
+  debug:
+    msg: "{{ logserver_output.stdout_lines }}" 

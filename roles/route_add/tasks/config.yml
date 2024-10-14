@@ -1,0 +1,13 @@
+---
+- name: 为ens33网卡添加静态路由策略
+  copy:
+    content: "192.168.2.1/24 via 192.168.77.2 dev ens33"
+    dest: /etc/sysconfig/network-scripts/route-ens33
+    backup: yes
+- name: 重启网卡，使添加的静态路由策略生效
+  service:
+    name: NetworkManager
+    state: restarted
+    enabled: yes
+    args: ens33
+- import_tasks: check.yml

@@ -1,0 +1,21 @@
+---
+- name: 停止redis1
+  service:
+    name: redis1
+    state: stopped
+  tags: master
+- name: 停止redis2
+  service:
+    name: redis2
+    state: stopped
+  tags: slave
+  
+---
+- name: 停止shard1、shard2、shard3实例服务
+ # when: shardserver is defined
+  shell: | 
+    echo -e "use admin;\ndb.shutdownServer();\nexit;" | /opt/mongodb/bin/mongo --host {{ inventory_hostname }} --port {{ item }} -u {{ mongodb_admin}} -p {{ mongodb_admin_pass }}
+    sleep 10
+  with_items:
+    - 6379
+    - 6389

@@ -1,0 +1,7 @@
+---
+# 重启chronyd服务,并设置开机自启动
+- name: restart chronyd    
+  service: 
+    name: chronyd 
+    state: restarted 
+    enabled: yes

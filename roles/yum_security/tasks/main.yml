@@ -1,0 +1,3 @@
+---
+# tasks file for yum_security
+- import_tasks: "{{ operation }}.yml"

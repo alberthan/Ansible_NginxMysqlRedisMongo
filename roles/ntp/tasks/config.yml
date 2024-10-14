@@ -1,0 +1,19 @@
+- name: 安装ntp
+  dnf:
+    name: ntp
+    state: latest
+  
+- name: 启动ntp服务并设置开机自启
+  service: name=ntpd state=started enabled=yes
+  ignore_errors: yes
+
+- name: 配置ntp服务器为{{ ntp_server }}
+  lineinfile:
+    path: /etc/ntp.conf
+    state: present
+    regexp: '^server {{ ntp_server }}'
+    line: "server {{ ntp_server }}"
+    backup: yes
+  notify: restart ntpd
+  ignore_errors: yes
+- import_tasks: check.yml

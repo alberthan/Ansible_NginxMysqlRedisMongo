@@ -1,0 +1,27 @@
+---
+- name: 拷贝categraf安装包到/opt目录
+  copy:
+    src: categraf.tar.gz
+    dest: /opt
+
+- name: 安装categraf到/opt目录
+  shell: |
+    tar -zxvf categraf.tar.gz
+    chmod -R 755 categraf/
+  args:
+    chdir: /opt/
+
+- name: 添加systemd配置文件
+  copy:
+    src: categraf.service  
+    dest: /usr/lib/systemd/system/
+    mode: 0600
+
+- name: 配置categraf开机自启动
+  systemd: 
+    name: categraf
+    enabled: yes
+    daemon_reload: yes
+
+- import_tasks: start.yml
+- import_tasks: config.yml

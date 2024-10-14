@@ -1,0 +1,67 @@
+---
+
+- name: 创建mysql数据目录/data/mysql{data,log,tmp,binlog,install}
+  file:
+    path: "{{ item }}"
+    mode: '0755'
+    owner: mysql
+    group: mysql
+    state: directory
+  with_items:
+    - /data/mysql
+    - /data/mysql/data
+    - /data/mysql/log
+    - /data/mysql/tmp
+    - /data/mysql/binlog
+    - /data/mysql/install
+    
+- name: 检查mysql安装包是否存在
+  stat:
+    path: /data/mysql/mysql.tar
+  register: mysql_package
+  
+- name: mysql安装包不存在，下载mysql软件包
+  shell: wget https://downloads.mysql.com/archives/get/p/23/file/mysql-8.0.37-1.el8.x86_64.rpm-bundle.tar -O /data/mysql/mysql.tar
+  when: not mysql_package.stat.exists
+  
+- name: 解压mysql包
+  unarchive:
+    src: /data/mysql/mysql.tar
+    dest: /data/mysql/install
+    remote_src: yes
+    
+- name: 安装mysql
+  shell: |
+    cd /data/mysql/install/;yum install * -y
+    
+- name: 下发gtid模式的mysql配置文件my.cnf到/etc/目录
+  template:
+    src: my_gtid.cnf
+    dest: /etc/my.cnf
+    mode: 0644
+  when: replication_mode=='gtid'
+  
+- name: 下发基于点位模式的mysql配置文件my.cnf到/etc/目录
+  template:
+    src: my_position.cnf
+    dest: /etc/my.cnf
+    mode: 0644
+  when: replication_mode=='position'
+  
+- name: 初始化mysql数据库
+  shell: mysqld --initialize
+
+- import_tasks: start.yml
+
+- name: 从日志中获取mysql数据库初始化密码
+  shell: cat /data/mysql/log/mysqld.log |grep localhost|grep "temporary password"|awk '{print $NF}'
+  register: mysql_init_passwd
+
+- name: 显示mysql数据库初始化密码
+  debug:
+    msg: "{{ mysql_init_passwd.stdout }}"
+
+- name: 修改mysql数据库root用户密码
+  shell: mysqladmin -u{{ mysql_user }}  -p'{{mysql_init_passwd.stdout}}' -S /data/mysql/tmp/mysql.sock password '{{ mysql_passwd }}' 
+
+- import_tasks: master_slave.yml

@@ -1,0 +1,14 @@
+---
+
+- name: 获取categraf状态
+  shell: |
+    #!/bin/bash
+    r=`systemctl status categraf| grep Active`
+    echo $r
+  register: categraf_result
+  become: yes
+
+- name: categraf状态
+  debug: var=categraf_result.stdout verbosity=0
+
+

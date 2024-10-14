@@ -1,0 +1,5 @@
+---
+
+- name: 启动configserver
+  when: configserver is defined
+  shell: /opt/mongodb/bin/mongod -f /data/mongodb/configserver/conf/configserver.conf

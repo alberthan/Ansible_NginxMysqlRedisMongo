@@ -1,0 +1,9 @@
+- name: 检查在/etc/host.conf文件中配置主机解析地址的顺序配置
+  shell: grep order /etc/host.conf
+  register: host_output
+  ignore_errors: yes
+  
+- name: 显示在/etc/host.conf文件中配置主机解析地址的顺序配置
+  debug:
+    msg: "{{ host_output.stdout }}"
+        

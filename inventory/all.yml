@@ -1,0 +1,19 @@
+#---
+all:
+    vars:
+        disk_mount: "sdb"
+        n9e_mysql_user: "root"
+        n9e_mysql_passwd: "123456"
+        n9e_addr: "192.168.77.130:17000"
+        mysql_user: "root"
+        mysql_passwd: "123456"
+        mysql_port: "3306"
+        mysql_repl_user: "repl"
+        mysql_repl_passwd: "repl123456"
+        redis_passwd: "123456"
+        mongodb_admin: "admin"
+        mongodb_admin_pass: "123456"
+
+        keepalived_virtual_ip: "192.168.10.253"
+        keepalived_virtual_router_id: "222"
+

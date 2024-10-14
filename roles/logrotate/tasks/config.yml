@@ -1,0 +1,13 @@
+- name: 在/etc/logrotate.d/目录下，将rsyslog文件重命名为syslog
+  shell:
+    cmd: mv rsyslog syslog
+    chdir: /etc/logrotate.d/
+  ignore_errors: yes
+- name: 在/etc/logrotate.d/syslog文件中配置可以对日志按大小10M进行切割
+  lineinfile:
+    path: /etc/logrotate.d/syslog
+    insertafter: '^{'
+    line: '    size 10M'
+    backup: yes
+  ignore_errors: yes
+- import_tasks: check.yml

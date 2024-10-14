@@ -1,0 +1,13 @@
+- name: 在/etc/login.defs文件中配置口令生存周期最长为90天，最小为10天及密码最小长度为8
+  lineinfile:
+    path: /etc/login.defs
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    backrefs: no
+    backup: yes
+  ignore_errors: yes
+  with_items:
+    - { regexp: '^PASS_MIN_LEN',  line: 'PASS_MIN_LEN    8' }
+    - { regexp: '^PASS_MAX_DAYS', line: 'PASS_MAX_DAYS   90' }
+    - { regexp: '^PASS_MIN_DAYS', line: 'PASS_MIN_DAYS   10' }
+- import_tasks: check.yml

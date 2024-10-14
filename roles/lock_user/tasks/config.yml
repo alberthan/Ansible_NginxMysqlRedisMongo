@@ -1,0 +1,23 @@
+- name: 设置lp|sync|halt|operator|games|nobody系统相关用户shell为/bin/false
+  user: 
+    name: "{{ item }}"
+    shell: /bin/false
+  ignore_errors: yes
+  with_items:
+    - lp
+    - sync
+    - halt
+    - operator
+    - games
+    - nobody
+- name: 锁定lp|sync|halt|operator|games|nobody系统相关用户
+  shell: /sbin/usermod -L {{ item }}
+  ignore_errors: yes
+  with_items:
+    - lp
+    - sync
+    - halt
+    - operator
+    - games
+    - nobody
+- import_tasks: check.yml

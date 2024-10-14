@@ -1,0 +1,22 @@
+---
+- name: 获取集群状态
+  shell: |
+    #!/bin/bash
+    r=`/opt/redis/bin/redis-cli -a {{ redis_passwd }}  -c -p 6379 cluster info`
+    echo $r
+  register: cluster_status
+  when: cluster_command_host is defined
+
+- name: 集群状态
+  debug: var=cluster_status.stdout_lines verbosity=0
+  when: cluster_command_host is defined
+  
+- name: 获取集群各节点状态
+  shell: /opt/redis/bin/redis-cli -a {{ redis_passwd }}  -c -p 6379 cluster nodes
+  register: clusternode_status
+  when: cluster_command_host is defined
+
+- name: 集群各节点状态
+  debug: var=clusternode_status.stdout_lines verbosity=0
+  when: cluster_command_host is defined
+  

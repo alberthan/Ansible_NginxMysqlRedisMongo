@@ -1,0 +1,8 @@
+---
+
+- name: 停止categraf
+  systemd: name=categraf state=stopped 
+  become: yes
+
+- import_tasks: status.yml
+

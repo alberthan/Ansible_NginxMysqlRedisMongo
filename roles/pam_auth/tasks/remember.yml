@@ -1,0 +1,22 @@
+- name: system-auth文件中配置口令重复次数限制为5并限制到root
+  lineinfile:
+    path: /etc/pam.d/system-auth
+    insertafter: '^password\s+requisite\s+pam_pwquality.so'
+    line: 'password    required      pam_pwhistory.so use_authtok remember=5 enforce_for_root'
+    backup: yes
+  ignore_errors: yes
+- name: password-auth文件中配置口令重复次数限制为5并限制到root
+  lineinfile:
+    path: /etc/pam.d/password-auth
+    insertafter: '^password\s+requisite\s+pam_pwquality.so'
+    line: 'password    required      pam_pwhistory.so use_authtok remember=5 enforce_for_root'
+    backup: yes
+  ignore_errors: yes
+- name: system-auth文件中password    sufficient    pam_unix.so行配置口令重复次数限制为5
+  lineinfile:
+    path: /etc/pam.d/system-auth
+    regexp: '^password\s+sufficient'
+    line: 'password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok remember=5'
+    backup: yes
+  ignore_errors: yes
+- import_tasks: check.yml

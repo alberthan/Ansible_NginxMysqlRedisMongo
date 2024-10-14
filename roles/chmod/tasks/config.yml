@@ -1,0 +1,9 @@
+- name: 配置/etc/security文件权限为600    
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0600
+  ignore_errors: yes
+  with_items:
+    - /etc/security
+- import_tasks: check.yml

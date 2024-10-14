@@ -1,0 +1,14 @@
+---
+- name: 安装nginx
+  shell: yum install nginx -y
+
+- name: 下发nginx配置文件
+  template:
+    src: nginx.conf
+    dest: /etc/nginx/
+    mode: 0644
+  notify:
+    - reload nginx
+
+- import_tasks: start.yml
+

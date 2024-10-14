@@ -1,0 +1,52 @@
+- name: 在/etc/profile文件中设置命令行界面登录超时时间TMOUT为300s
+  block: 
+    - name: 如果/etc/profile定义了TMOUT内容，则删除
+      lineinfile:
+        path: /etc/profile
+        regexp: '^TMOUT='
+        state: absent
+        backup: yes
+    - name: 如果/etc/profile定义了export TMOUT内容，则删除
+      lineinfile:
+        path: /etc/profile
+        regexp: '^export\s+TMOUT$'
+        state: absent
+    - name: 在/etc/profile文件中更新或添加一行export TMOUT=300
+      lineinfile:
+        path: /etc/profile
+        regexp: '^export\s+TMOUT='
+        line: 'export TMOUT=300'
+      notify: source profile
+  tags: timeout
+  
+- name: 在/etc/profile文件中设置用户缺省UMASK为027
+  lineinfile:
+    path: /etc/profile
+    regexp: '^umask'
+    line: 'umask 027'
+    backup: yes
+  notify: source profile
+  tags: umask
+  
+- name: 在/etc/profile文件中设置在.bash_history文件中保存命令的记录总数为5条
+  lineinfile:
+    path: /etc/profile
+    regexp: '^HISTFILESIZE'
+    line: '{{ item }}'
+    backup: yes
+  notify: source profile
+  with_items:
+    - HISTFILESIZE=5
+  tags: bash_history
+    
+- name: 在/etc/profile文件中设置shell会话中history命令输出的记录总数为5条
+  lineinfile:
+    path: /etc/profile
+    regexp: '^HISTSIZE'
+    line: '{{ item }}'
+    backup: yes
+  notify: source profile
+  with_items:
+    - HISTSIZE=5
+  tags: history
+- import_tasks: check.yml

@@ -1,0 +1,18 @@
+- name: 设置远程日志转发策略
+  block: 
+    - name: 检查是否已经配置了远程日志服务器{{ logserver }}
+      command: grep -q "{{ logserver }}" /etc/rsyslog.conf
+      register: rsyslog_check
+      failed_when: false  # 即使没有找到也不报错
+
+    - name: 在/etc/rsyslog.conf文件中配置远程日志服务器为{{ logserver }}
+      lineinfile:
+        path: /etc/rsyslog.conf
+        line: "*.* @{{ logserver }}"
+        insertafter: EOF
+        create: yes
+        backup: yes
+      when: rsyslog_check.rc != 0  # 只有当grep没有找到时才执行
+      notify: restart rsyslog
+
+- import_tasks: check.yml

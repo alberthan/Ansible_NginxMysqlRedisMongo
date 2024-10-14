@@ -1,0 +1,34 @@
+- name: 检查root用户远程登录限制情况
+  shell: grep  ^PermitRootLogin /etc/ssh/sshd_config
+  register: PermitRootLogin_output
+  ignore_errors: yes
+  tags: PermitRootLogin
+- name: 显示root用户远程登录限制情况
+  debug:
+    msg: "{{ PermitRootLogin_output.stdout }}"
+  tags: PermitRootLogin
+    
+    
+- name: 检查/etc/ssh/sshd_config文件中是否配置ssh登录前警告Banner内容
+  shell: grep ^Banner /etc/ssh/sshd_config
+  register: Banner_output
+  ignore_errors: yes
+  tags: ssh_banner
+  
+- name: 显示/etc/ssh/sshd_config文件中是否配置ssh登录前警告Banner内容
+  debug:
+    msg: "{{ Banner_output.stdout }}"
+  when: Banner_output.rc == 0 
+  tags: ssh_banner
+  
+- name: 检查/etc/ssh_banner文件中配置的ssh登录前警告Banner内容
+  shell: cat /etc/ssh_banner
+  register: ssh_banner
+  ignore_errors: yes
+  when: Banner_output.rc == 0  
+  tags: ssh_banner
+- name: 显示/etc/ssh_banner文件中配置的ssh登录前警告Banner内容
+  debug:
+    msg: "{{ ssh_banner.stdout }}"
+  when: ssh_banner.rc == 0  
+  tags: ssh_banner

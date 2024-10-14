@@ -1,0 +1,24 @@
+---
+- name: 对/dev/{{ disk_mount }}磁盘进行分区
+  shell: |
+    parted "/dev/{{ disk_mount }}" << EOF
+    mklabel gpt
+    yes
+    mkpart primary 1 100%
+    quit
+    EOF
+- name: 格式化磁盘/dev/{{ disk_mount }}并挂载到/data
+  shell: |
+    sleep 15
+    mkfs.xfs "/dev/{{ disk_mount }}1"
+    mkdir -p /data
+    mount "/dev/{{ disk_mount }}1" /data
+- name: 配置fstab，写入/dev/{{ disk_mount }}挂载信息
+  lineinfile:
+    dest: /etc/fstab
+    regexp: "^/dev/{{ disk_mount }}1"
+    backrefs: false
+    backup: true
+    line: "/dev/{{ disk_mount }}1    /data   xfs    defaults        0 0"
+
+- import_tasks: check.yml

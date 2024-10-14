@@ -1,0 +1,9 @@
+---
+- name:  检查路由生效配置
+  shell: netstat -rn
+  register: route_output
+  ignore_errors: yes
+  
+- name: 显示路由生效配置
+  debug:
+    msg: "{{ route_output.stdout_lines }}"

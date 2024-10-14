@@ -1,0 +1,78 @@
+---
+- name: 下发mongodb安装依赖包compat-openssl
+  copy:
+    src: compat-openssl10-1.0.2o-4.el8_6.x86_64.rpm 
+    dest: /opt/
+
+- name: 安装mongodb依赖包compat-openssl
+  shell: yum install -y /opt/compat-openssl10-1.0.2o-4.el8_6.x86_64.rpm
+
+- name: 下发mongodb安装包
+  copy:
+    src: mongodb-linux-x86_64-rhel70-4.4.20.tgz
+    dest: /opt/
+
+- name: 解压mongodb包
+  unarchive:
+    src: /opt/mongodb-linux-x86_64-rhel70-4.4.20.tgz
+    dest: /opt/
+    remote_src: yes
+
+- name: 目录改名
+  shell: mv /opt/mongodb-linux-x86_64-rhel70-4.4.20 /opt/mongodb
+  ignore_errors: true
+
+- name: 新建configserver目录
+  when: configserver is defined
+  file:
+    path: /data/mongodb/configserver/{{ item }}
+    state: directory
+    mode: '0755'
+  with_items:
+    - data
+    - log
+    - conf
+
+- name: 新建mongos目录
+  when: mongos is defined
+  file:
+    path: /data/mongodb/mongos/{{ item }}
+    state: directory
+    mode: '0755'
+  with_items:
+    - data
+    - log
+    - conf
+
+- name: 新建shard目录
+  when: shardserver is defined
+  file:
+    path: /data/mongodb/{{ item }}
+    state: directory
+    mode: '0755'
+  with_items:
+    - /shard1/data
+    - /shard1/conf
+    - /shard1/log
+    - /shard2/log
+    - /shard2/data
+    - /shard2/conf
+    - /shard3/data
+    - /shard3/conf
+    - /shard3/log
+
+- name: 关闭内存大页&配置环境变量
+  shell: | 
+    #!/bin/bash
+    echo never > /sys/kernel/mm/transparent_hugepage/enabled
+    echo never > /sys/kernel/mm/transparent_hugepage/defrag
+    echo "export PATH=\$PATH:/opt/mongodb/bin/" >> /etc/profile
+    source /etc/profile
+
+- name: key下发
+  copy:
+    src: mongo.key
+    dest: /opt/mongodb/
+    mode: '0400'
+
+- import_tasks: config.yml

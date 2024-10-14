@@ -1,0 +1,9 @@
+- name: 检查在/etc/logrotate.d/syslog文件中定义配置的日志切割策略
+  shell: cat /etc/logrotate.d/syslog
+  register: logrotate_output
+  ignore_errors: yes
+  
+- name: 显示在/etc/logrotate.d/syslog文件中定义配置的日志切割策略
+  debug:
+    msg: "{{ logrotate_output.stdout_lines }}"
+        

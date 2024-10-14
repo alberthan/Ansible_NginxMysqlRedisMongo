@@ -1,0 +1,9 @@
+- name: 在/etc/rsyslog.conf文件中配置将authpriv类的日志记录到/var/log/authlog文件中
+  lineinfile:
+    path: /etc/rsyslog.conf
+    insertafter: '^authpriv\.'
+    line: 'authpriv.*                                              /var/log/authlog'
+    backup: yes
+  ignore_errors: yes
+  notify: restart rsyslog
+- import_tasks: check.yml

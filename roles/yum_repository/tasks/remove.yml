@@ -1,0 +1,8 @@
+---
+
+- name: 移除名为yumlocal的yum存储库并清理元数据缓存
+  yum_repository:
+    name: yumlocal
+    state: absent
+  notify: yum-clean-metadata
+- import_tasks: check.yml

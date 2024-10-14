@@ -1,0 +1,6 @@
+- name: 启动redis并设置开机自启动
+  service:
+    name: redis
+    state: started
+    enabled: yes
+- import_tasks: status.yml

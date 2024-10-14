@@ -1,0 +1,11 @@
+[Unit]
+Description=redis2 Service
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/opt/redis/bin/redis-server /opt/redis/cluster-conf/6389/redis.conf
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

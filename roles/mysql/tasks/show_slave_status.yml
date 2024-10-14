@@ -1,0 +1,12 @@
+---
+- name: 获取slave状态
+  when: slave is defined
+  shell: |
+    #!/bin/bash
+    rr=`mysql -u{{ mysql_user }} -p{{ mysql_passwd }} -S /data/mysql/tmp/mysql.sock -e "show slave status \G" 2>/dev/null |grep "Slave_IO_Running:\|Slave_SQL_Running:"`
+    echo $rr
+  register: slave_status
+    
+- name: master与slave主从状态
+  when: slave is defined
+  debug: var=slave_status.stdout verbosity=0

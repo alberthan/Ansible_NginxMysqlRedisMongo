@@ -1,0 +1,9 @@
+---
+
+- name: 下发categraf配置文件
+  template:
+    src: config.toml
+    dest: /opt/categraf/conf/
+    mode: 0644
+  notify:
+    - restart categraf

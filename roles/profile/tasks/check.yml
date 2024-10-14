@@ -1,0 +1,39 @@
+- name: 检查在/etc/profile文件中定义配置的会话登录超时时间TMOUT设置
+  shell: grep TMOUT /etc/profile
+  register: timeout_output
+  ignore_errors: yes
+  tags: timeout
+- name: 显示在/etc/profile文件中定义配置的会话登录超时时间TMOUT设置
+  debug:
+    msg: "{{ timeout_output.stdout_lines }}"
+  tags: timeout
+  
+- name: 检查在/etc/profile文件中定义配置umask设置
+  shell: grep -i umask /etc/profile
+  register: umask_output
+  ignore_errors: yes
+  tags: umask
+- name: 显示在/etc/profile文件中定义配置umask设置
+  debug:
+    msg: "{{ umask_output.stdout_lines }}"
+  tags: umask
+  
+- name: 检查在/etc/profile文件中定义配置的.bash_history文件中保存命令的记录总数HISTFILESIZE设置
+  shell: grep HISTFILESIZE /etc/profile
+  register: bash_history_output
+  ignore_errors: yes
+  tags: bash_history
+- name: 显示在/etc/profile文件中定义配置的.bash_history文件中保存命令的记录总数HISTFILESIZE设置
+  debug:
+    msg: "{{ bash_history_output.stdout_lines }}"
+  tags: bash_history
+  
+- name: 检查在/etc/profile文件中定义配置的shell会话中history命令输出的记录总数设置
+  shell: grep HISTSIZE /etc/profile
+  register: history_output
+  ignore_errors: yes
+  tags: history
+- name: 显示在/etc/profile文件中定义配置的shell会话中history命令输出的记录总数设置
+  debug:
+    msg: "{{ history_output.stdout_lines }}"
+  tags: history

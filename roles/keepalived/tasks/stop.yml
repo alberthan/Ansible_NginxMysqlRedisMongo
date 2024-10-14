@@ -1,0 +1,4 @@
+---
+- name: 停止keepalived服务
+  systemd: daemon_reload=yes name=keepalived state=stopped
+- import_tasks: status.yml

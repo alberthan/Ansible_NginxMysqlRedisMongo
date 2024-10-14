@@ -1,0 +1,12 @@
+---
+
+- name: 获取mysql状态
+  shell: |
+    #!/bin/bash
+    r=`systemctl status mysqld| grep Active`
+    echo $r
+  register: mysqld_status
+
+- name: mysql状态
+  debug: var=mysqld_status.stdout_lines verbosity=0
+

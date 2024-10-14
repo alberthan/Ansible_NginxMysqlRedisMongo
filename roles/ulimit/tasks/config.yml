@@ -1,0 +1,12 @@
+- name: 在/etc/security/limits.conf文件中配置core文件大小限制（* soft core 0和* hard core 0）
+  pam_limits:
+    domain: '*'
+    limit_type: '{{ item.type }}'
+    limit_item: core
+    value: 0
+    dest: /etc/security/limits.conf
+    backup: yes
+  with_items:
+    - { type: 'soft' }
+    - { type: 'hard' }
+- import_tasks: check.yml
